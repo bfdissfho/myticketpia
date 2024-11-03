@@ -5,6 +5,8 @@
 // @description  try to take over the world!
 // @author       You
 // @match        https://ticket.pia.jp/piasp/inbound/*
+// @updateURL    https://raw.githubusercontent.com/bfdissfho/myticketpia/refs/heads/main/ticket%20pia%20and%20sell%20pia
+// @downloadURL  https://raw.githubusercontent.com/bfdissfho/myticketpia/refs/heads/main/ticket%20pia%20and%20sell%20pia
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=pia.jp
 // @grant        none
 // ==/UserScript==
