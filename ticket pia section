@@ -1,0 +1,80 @@
+// ==UserScript==
+// @name         ticket pia section
+// @namespace    http://tampermonkey.net/
+// @version      2024-09-15
+// @description  try to take over the world!
+// @author       You
+// @match        https://ticket.pia.jp/sp/ticketInformation.do?eventCd*
+// @match        https://ticket-sale.pia.jp/sp/purchase/SessionAcceptAction.do?
+// @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    let seatName, performanceDate; // Variables to store seat name and performance date
+
+    // Function to randomly click a seat and alert the information
+    function randomClickSeat() {
+        // Select all performance sections
+        const performances = document.querySelectorAll('.performance-list-panel');
+
+        if (performances.length === 0) {
+            console.log("No performance sections found!");
+            return;
+        }
+
+        // Select a random performance section
+        const randomPerformanceIndex = Math.floor(Math.random() * performances.length);
+        const selectedPerformance = performances[randomPerformanceIndex];
+
+        // Get the performance date
+        const dateElement = selectedPerformance.querySelector('.performance-list-panel-contents-title-date-day');
+        const dateTimeElement = selectedPerformance.querySelector('.performance-list-panel-contents-title-date-time');
+        performanceDate = `${dateElement.innerText} ${dateTimeElement.innerText.trim()}`;
+
+        // Select all seat elements within the chosen performance
+        const seats = selectedPerformance.querySelectorAll('.btn-seat-status-wrap');
+
+        if (seats.length === 0) {
+            console.log("No seats found in this performance section!");
+            return;
+        }
+
+        // Select a random seat
+        const randomSeatIndex = Math.floor(Math.random() * seats.length);
+        const selectedSeat = seats[randomSeatIndex];
+
+        // Get the seat name
+        seatName = selectedSeat.querySelector('.btn-seat-status-label-title').innerText;
+
+        // Store the seat information in localStorage
+        localStorage.setItem('selectedSeat', seatName);
+        localStorage.setItem('performanceDate', performanceDate);
+
+        // Click the selected seat directly
+        selectedSeat.click();
+    }
+
+    // Check if seat information exists in localStorage
+    function checkForInputElement() {
+        const inputElement = document.querySelector('.form-input-wrap input[name="custinfo.mlAddr"]');
+
+        if (inputElement) {
+            const storedSeatName = localStorage.getItem('selectedSeat');
+            const storedPerformanceDate = localStorage.getItem('performanceDate');
+            alert(`Seat: ${storedSeatName}\nDate: ${storedPerformanceDate}`);
+            // Clear the stored data
+            localStorage.removeItem('selectedSeat');
+            localStorage.removeItem('performanceDate');
+        } else {
+            setTimeout(checkForInputElement, 500); // Check again after 500ms
+        }
+    }
+
+    // Start the process when the page loads
+
+    setTimeout(randomClickSeat, 1000); // Start after a short delay
+    setTimeout(checkForInputElement, 5000);
+})();
