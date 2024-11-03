@@ -5,7 +5,9 @@
 // @description  try to take over the world!
 // @author       You
 // @match        https://ticket.pia.jp/sp/ticketInformation.do?eventCd*
-// @match        https://ticket-sale.pia.jp/sp/purchase/SessionAcceptAction.do?
+// @match        https://ticket-sale.pia.jp/sp/purchase/SessionAcceptAction.do?*
+// @updateURL    https://raw.githubusercontent.com/bfdissfho/myticketpia/refs/heads/main/ticket%20pia%20section
+// @downloadURL  https://raw.githubusercontent.com/bfdissfho/myticketpia/refs/heads/main/ticket%20pia%20section
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        none
 // ==/UserScript==
