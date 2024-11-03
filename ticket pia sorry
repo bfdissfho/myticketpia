@@ -1,0 +1,20 @@
+// ==UserScript==
+// @name         ticket pia sorry
+// @namespace    http://tampermonkey.net/
+// @version      2024-09-15
+// @description  try to take over the world!
+// @author       You
+// @match        http://sorry.pia.jp/nt2/pia/
+// @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
+// @grant        none
+// ==/UserScript==
+
+(function() {
+
+    function goBack() {
+        window.history.back();
+    }
+
+    setTimeout(goBack, 1000);
+
+})();
