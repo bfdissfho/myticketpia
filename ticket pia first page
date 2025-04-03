@@ -1,34 +1,41 @@
 // ==UserScript==
 // @name         ticket pia first page
 // @namespace    http://tampermonkey.net/
-// @version      2024-09-13
+// @version      2025-4-3
 // @description  try to take over the world!
 // @author       You
 // @match        https://ticket.pia.jp/sp/lp/event.do?*
+// @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @updateURL    https://raw.githubusercontent.com/bfdissfho/myticketpia/refs/heads/main/ticket%20pia%20first%20page
 // @downloadURL  https://raw.githubusercontent.com/bfdissfho/myticketpia/refs/heads/main/ticket%20pia%20first%20page
-// @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        none
 // ==/UserScript==
 
 (function() {
 
+
+    function confirm_button() {
+        var applicationButton = document.querySelector('.dst-btn.btn.btn-primary.btn-icon-right');
+        if (applicationButton) {
+            applicationButton.click();
+        }
+    }
+
     function clickButtons() {
         // Click the agreement button
         var agreementButton = document.getElementById('agreement-btn');
+        var agreementButton2 = document.querySelector('span.checkbox-contract-panel-icon');
+
         if (agreementButton) {
             agreementButton.click();
         }
-
-        // Set a timeout to click the application button after 2 seconds (2000 ms)
-        setTimeout(function() {
-            var applicationButton = document.querySelector('.dst-btn.btn.btn-primary.btn-icon-right');
-            if (applicationButton) {
-                applicationButton.click();
-            }
-        }, 1500); // Adjust the delay as needed
+        if (agreementButton2) {
+            agreementButton2.click();
+        }
     }
 
+    setTimeout(confirm_button, 1500)
+    setTimeout(confirm_button, 3000)
     setTimeout(clickButtons, 1000);
 
 })();
