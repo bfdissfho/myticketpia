@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         ticket pia section
 // @namespace    http://tampermonkey.net/
-// @version      2024-09-15
+// @version      2025-04-04
 // @description  try to take over the world!
 // @author       You
 // @match        https://ticket.pia.jp/sp/ticketInformation.do?eventCd*
-// @match        https://ticket-sale.pia.jp/sp/purchase/SessionAcceptAction.do?*
+// @match        https://ticket-sale.pia.jp/sp/purchase/SessionAcceptAction.do?
+// @match        https://ticket.pia.jp/sp/ticketInformationBeforeForSperls.do?*
 // @updateURL    https://raw.githubusercontent.com/bfdissfho/myticketpia/refs/heads/main/ticket%20pia%20section
 // @downloadURL  https://raw.githubusercontent.com/bfdissfho/myticketpia/refs/heads/main/ticket%20pia%20section
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
@@ -17,9 +18,108 @@
 
     let seatName, performanceDate; // Variables to store seat name and performance date
 
+
+    function click_section_list () {
+        const section_list = document.querySelectorAll('a.performance-list-panel-btn.fn-seat-open-btn');
+
+        if (section_list) {
+            section_list.forEach(section => {
+                const clickEvent = new Event('click', {
+                    bubbles: true, // 事件是否應該冒泡到父元素
+                    cancelable: true // 事件是否可以被阻止默認動作
+                });
+                section.dispatchEvent(clickEvent);
+                console.log('已使用 dispatchEvent 點擊:', section);
+            });
+        } else {
+            console.log('找不到符合條件的元素。');
+        }
+    }
+
+
+
+    function choose_section() {
+        const sections = document.querySelectorAll('.btn-seat-status-wrap');
+        const eligibleLabels = []; // 改為存儲 label 元素
+
+        sections.forEach(section => {
+            // 檢查是否存在 btn-seat-status-label-disabled 類名的 label
+            const disabledLabel = section.querySelector('label.btn-seat-status-label-disabled');
+
+            if (!disabledLabel) { // 如果不存在 disabled 的 label，則繼續檢查是否包含 "box"
+                const labelElement = section.querySelector('label.btn-seat-status-label:not(.btn-seat-status-label-disabled)'); // 選擇非 disabled 的 label
+                const labelSpanTitle = labelElement ? labelElement.querySelector('span.btn-seat-status-label-title') : null;
+
+                if (labelSpanTitle) {
+                    const text = labelSpanTitle.textContent || labelSpanTitle.innerText;
+
+                    if (!text.includes('box')) {
+                        console.log('找到不包含 "box" 且未禁用的 label:', labelElement);
+                        eligibleLabels.push(labelElement); // 將符合條件的 label 添加到數組中
+                    }
+                } else {
+                    console.log('在 .btn-seat-status-wrap 元素中找不到 span.btn-seat-status-label-title');
+                }
+            } else {
+                console.log('找到禁用的 label，已排除:', disabledLabel);
+            }
+        });
+
+        // 隨機點擊一個符合條件的 label
+        if (eligibleLabels.length > 0) {
+            const randomIndex = Math.floor(Math.random() * eligibleLabels.length);
+            const randomLabel = eligibleLabels[randomIndex];
+            console.log('隨機點擊 label:', randomLabel);
+            randomLabel.click()
+
+        } else {
+            console.log('沒有找到不包含 "box" 且未禁用的 label，無法執行點擊。');
+        }
+    }
+
+    function choose_quan(){
+        const selectElement = document.getElementById('ticket_num_0');
+
+        if (selectElement) {
+            // 遍歷所有 <option> 元素
+            for (let i = 0; i < selectElement.options.length; i++) {
+                if (selectElement.options[i].value === '2') {
+                    // 找到值為 "2" 的選項，設置 selectedIndex
+                    selectElement.selectedIndex = i;
+
+                    // 創建並觸發 'change' 事件
+                    const changeEvent = new Event('change', {
+                        bubbles: true, // 事件是否應該冒泡到父元素
+                        cancelable: false // 事件是否可以被阻止默認動作
+                    });
+                    selectElement.dispatchEvent(changeEvent);
+
+                    console.log('已使用 dispatchEvent 選擇值為 "2" 的選項。');
+                    return; // 找到並選擇後即可停止循環
+                }
+            }
+            console.log('在 <select> 元素中沒有找到值為 "2" 的選項。');
+        } else {
+            console.log('找不到 id 為 "ticket_num_0" 的 <select> 元素。');
+        }
+
+    }
+
+
+    function confirm(){
+        const purchaseButton = document.querySelector('button.btn.btn-primary.btn-icon-right');
+        purchaseButton.click();
+    }
+
+    function confirm2(){
+        const purchaseButton = document.querySelector("#popup_ok")
+        purchaseButton.click();
+    }
+
     // Function to randomly click a seat and alert the information
     function randomClickSeat() {
         // Select all performance sections
+
         const performances = document.querySelectorAll('.performance-list-panel');
 
         if (performances.length === 0) {
@@ -75,8 +175,11 @@
         }
     }
 
-    // Start the process when the page loads
 
-    setTimeout(randomClickSeat, 1000); // Start after a short delay
-    setTimeout(checkForInputElement, 5000);
+    setTimeout(click_section_list, 1000);
+    setTimeout(choose_section, 3000);
+    setTimeout(choose_quan, 5000);
+    setTimeout(confirm, 7000);
+    setTimeout(confirm2, 9000);
+
 })();
