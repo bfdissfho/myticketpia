@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ticket pia section
 // @namespace    http://tampermonkey.net/
-// @version      2025-04-04
+// @version      2025-04-05
 // @description  try to take over the world!
 // @author       You
 // @match        https://ticket.pia.jp/sp/ticketInformation.do?eventCd*
@@ -15,10 +15,11 @@
 
 (function() {
     'use strict';
-
+    const want_quan = '2'
+    
+    
+    
     let seatName, performanceDate; // Variables to store seat name and performance date
-
-
     function click_section_list () {
         const section_list = document.querySelectorAll('a.performance-list-panel-btn.fn-seat-open-btn');
 
@@ -83,7 +84,7 @@
         if (selectElement) {
             // 遍歷所有 <option> 元素
             for (let i = 0; i < selectElement.options.length; i++) {
-                if (selectElement.options[i].value === '2') {
+                if (selectElement.options[i].value === want_quan) {
                     // 找到值為 "2" 的選項，設置 selectedIndex
                     selectElement.selectedIndex = i;
 
