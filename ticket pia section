@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ticket pia section
 // @namespace    http://tampermonkey.net/
-// @version      2025-04-05
+// @version      2025-05-22
 // @description  try to take over the world!
 // @author       You
 // @match        https://ticket.pia.jp/sp/ticketInformation.do?eventCd*
@@ -15,7 +15,7 @@
 
 (function() {
     'use strict';
-    const want_quan = '2'
+    const want_quan = '4'
     
     
     
