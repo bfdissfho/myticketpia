@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ticket pia first page
 // @namespace    http://tampermonkey.net/
-// @version      2025-4-3
+// @version      2025-06-11
 // @description  try to take over the world!
 // @author       You
 // @match        https://ticket.pia.jp/sp/lp/event.do?*
@@ -15,9 +15,13 @@
 
 
     function confirm_button() {
-        var applicationButton = document.querySelector('.dst-btn.btn.btn-primary.btn-icon-right');
-        if (applicationButton) {
-            applicationButton.click();
+        var applicationButtons = document.querySelectorAll('.dst-btn.btn.btn-primary.btn-icon-right');
+    
+        if (applicationButtons.length > 0) { // 確保至少有一個按鈕存在
+            var randomIndex = Math.floor(Math.random() * applicationButtons.length);
+            applicationButtons[randomIndex].click();
+        } else {
+            console.log("沒有找到符合的按鈕。");
         }
     }
 
