@@ -4,7 +4,7 @@
 // @version      2024-09-15
 // @description  try to take over the world!
 // @author       You
-// @match        http://sorry.pia.jp/nt2/pia/
+// @match        http://sorry.pia.jp/*
 // @updateURL    https://raw.githubusercontent.com/bfdissfho/myticketpia/refs/heads/main/ticket%20pia%20sorry
 // @downloadURL  https://raw.githubusercontent.com/bfdissfho/myticketpia/refs/heads/main/ticket%20pia%20sorry
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
