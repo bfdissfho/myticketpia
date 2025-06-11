@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ticket pia section
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-11
+// @version      2025-06-111
 // @description  try to take over the world!
 // @author       You
 // @match        https://ticket.pia.jp/sp/ticketInformation.do?eventCd*
@@ -15,7 +15,7 @@
 
 (function() {
     'use strict';
-    const want_quan = '6'
+    const want_quan = 'max'
     
     
     
@@ -78,32 +78,35 @@
         }
     }
 
-    function choose_quan(){
+    function choose_quan(want_quan) { // 將 want_quan 作為參數傳入
         const selectElement = document.getElementById('ticket_num_0');
-
+    
         if (selectElement) {
-            // 遍歷所有 <option> 元素
-            for (let i = 0; i < selectElement.options.length; i++) {
-                if (selectElement.options[i].value === want_quan) {
-                    // 找到值為 "2" 的選項，設置 selectedIndex
-                    selectElement.selectedIndex = i;
-
-                    // 創建並觸發 'change' 事件
-                    const changeEvent = new Event('change', {
-                        bubbles: true, // 事件是否應該冒泡到父元素
-                        cancelable: false // 事件是否可以被阻止默認動作
-                    });
-                    selectElement.dispatchEvent(changeEvent);
-
-                    console.log('已使用 dispatchEvent 選擇值為 "2" 的選項。');
-                    return; // 找到並選擇後即可停止循環
+            if (want_quan === 'max') {
+                // 如果 want_quan 是 'max'，則選擇最後一個選項 (最大值)
+                selectElement.selectedIndex = selectElement.options.length - 1;
+                console.log('已選擇最大值選項。');
+            } else {
+                // 否則，遍歷所有 <option> 元素，嘗試找到匹配的值
+                for (let i = 0; i < selectElement.options.length; i++) {
+                    if (selectElement.options[i].value === want_quan) {
+                        selectElement.selectedIndex = i;
+                        console.log(`已選擇值為 "${want_quan}" 的選項。`);
+                        break; // 找到並選擇後即可停止循環
+                    }
                 }
             }
-            console.log('在 <select> 元素中沒有找到值為 "2" 的選項。');
+    
+            // 無論是 'max' 還是特定值，都觸發 'change' 事件
+            const changeEvent = new Event('change', {
+                bubbles: true,
+                cancelable: false
+            });
+            selectElement.dispatchEvent(changeEvent);
+    
         } else {
             console.log('找不到 id 為 "ticket_num_0" 的 <select> 元素。');
         }
-
     }
 
 
