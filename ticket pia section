@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ticket pia section
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-111
+// @version      2025-06-112
 // @description  try to take over the world!
 // @author       You
 // @match        https://ticket.pia.jp/sp/ticketInformation.do?eventCd*
@@ -78,7 +78,7 @@
         }
     }
 
-    function choose_quan(want_quan) { // 將 want_quan 作為參數傳入
+    function choose_quan() { // 將 want_quan 作為參數傳入
         const selectElement = document.getElementById('ticket_num_0');
     
         if (selectElement) {
