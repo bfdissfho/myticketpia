@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         ticket pia first page
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-11
+// @version      2025-07-11
 // @description  try to take over the world!
 // @author       You
 // @match        https://ticket.pia.jp/sp/lp/event.do?*
+// @match        https://ticket.pia.jp/sp/ticketInformation.do?eventCd=*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @updateURL    https://raw.githubusercontent.com/bfdissfho/myticketpia/refs/heads/main/ticket%20pia%20first%20page
 // @downloadURL  https://raw.githubusercontent.com/bfdissfho/myticketpia/refs/heads/main/ticket%20pia%20first%20page
@@ -13,33 +14,70 @@
 
 (function() {
 
+    /**
+     * 檢查頁面中是否存在特定文本「アクセスが集中しております」。
+     * 如果存在，則導航回上一頁。
+     */
+    function checkAndGoBack() {
+        // 檢查 document.body 的 innerText 是否包含目標字符串
+        // 使用 innerText 比 innerHTML 更能準確反映用戶看到的文本，且避免解析 HTML 標籤
+        if (document.body.innerText.includes('アクセスが集中しております')) {
+            console.log('偵測到「アクセスが集中しております」，正在返回上一頁...');
+            window.history.back(); // 返回上一頁
+            return true; // 表示已執行返回操作
+        }
+        return false; // 表示未偵測到該文本
+    }
 
+    /**
+     * 點擊應用按鈕。
+     * 這個函數會尋找第二個符合 '.dst-btn.btn.btn-primary.btn-icon-right' 選擇器的按鈕並點擊它。
+     */
     function confirm_button() {
-        var applicationButtons = document.querySelectorAll('.dst-btn.btn.btn-primary.btn-icon-right');
-    
-        if (applicationButtons.length > 0) { // 確保至少有一個按鈕存在
-            var randomIndex = Math.floor(Math.random() * applicationButtons.length);
-            applicationButtons[randomIndex].click();
-        } else {
-            console.log("沒有找到符合的按鈕。");
+        var applicationButton = document.querySelectorAll('.dst-btn.btn.btn-primary.btn-icon-right');
+        if (applicationButton && applicationButton.length > 1) { // 確保至少有兩個按鈕
+            var applicationButton2 = applicationButton[1]; // 選擇第二個按鈕
+            console.log('嘗試點擊確認按鈕 (第二個)...');
+            applicationButton2.click();
+        } else if (applicationButton && applicationButton.length === 1) {
+            // 如果只有一個按鈕，也可以考慮點擊它，這取決於實際頁面結構
+            console.log('偵測到一個確認按鈕，嘗試點擊...');
+            applicationButton[0].click();
         }
     }
 
+    /**
+     * 點擊同意按鈕。
+     * 這個函數會嘗試點擊 ID 為 'agreement-btn' 的按鈕，
+     * 或類選擇器為 'span.checkbox-contract-panel-icon' 的元素。
+     */
     function clickButtons() {
-        // Click the agreement button
+        // 點擊同意按鈕
         var agreementButton = document.getElementById('agreement-btn');
         var agreementButton2 = document.querySelector('span.checkbox-contract-panel-icon');
 
         if (agreementButton) {
+            console.log('嘗試點擊同意按鈕 (ID)...');
             agreementButton.click();
         }
         if (agreementButton2) {
+            console.log('嘗試點擊同意按鈕 (Span)...');
             agreementButton2.click();
         }
     }
 
-    setTimeout(confirm_button, 1500)
-    setTimeout(confirm_button, 3000)
-    setTimeout(clickButtons, 1000);
+    // 在執行其他操作之前，先檢查是否需要返回上一頁
+    // 設置一個短的延遲，確保頁面內容已部分加載
+    setTimeout(function() {
+        if (checkAndGoBack()) {
+            // 如果已經返回，則停止執行後續的按鈕點擊操作
+            return;
+        }
 
+        // 如果沒有返回，則繼續執行點擊按鈕的操作
+        // 設置不同的延遲時間，以應對頁面加載和元素渲染的時間
+        setTimeout(clickButtons, 1000); // 1秒後點擊同意按鈕
+        setTimeout(confirm_button, 1500); // 1.5秒後點擊確認按鈕
+        setTimeout(confirm_button, 3000); // 3秒後再次嘗試點擊確認按鈕，以防第一次失敗
+    }, 500); // 頁面載入後0.5秒開始檢查
 })();
